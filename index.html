@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uber | Scheduled Fare Watch Prototype</title>
+  <!-- Google Fonts: Inter for premium, clean typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- App Main Header -->
+  <header class="main-header">
+    <div class="header-logo">
+      <span class="brand-uber">Uber</span>
+      <span class="badge-beta">PROTOTYPE</span>
+    </div>
+    <div class="header-title">Scheduled Fare Watch</div>
+    <div class="header-actions">
+      <button id="btn-presentation-mode" class="btn-pill" title="Toggle Fullscreen App View">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+        <span>Presenter Mode</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container Split Layout -->
+  <div class="dashboard-wrapper">
+    
+    <!-- LEFT PANE: Mobile Simulator -->
+    <section class="simulator-pane">
+      <div class="device-chassis">
+        <!-- Speaker / Camera Notch -->
+        <div class="device-notch"></div>
+        
+        <!-- Status Bar -->
+        <div class="device-status-bar">
+          <div class="status-time" id="sim-time">14:02</div>
+          <div class="status-icons">
+            <!-- Cellular Signal -->
+            <svg class="icon-signal" width="17" height="11" viewBox="0 0 17 11" fill="currentColor">
+              <rect x="0" y="8" width="2" height="3" rx="0.5"/>
+              <rect x="4" y="6" width="2" height="5" rx="0.5"/>
+              <rect x="8" y="4" width="2" height="7" rx="0.5"/>
+              <rect x="12" y="2" width="2" height="9" rx="0.5"/>
+              <rect x="16" y="0" width="1" height="11" fill="none" stroke="currentColor" stroke-width="1"/>
+            </svg>
+            <!-- Wifi -->
+            <svg class="icon-wifi" width="15" height="11" viewBox="0 0 14 10" fill="currentColor">
+              <path d="M7 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm-4.95-4.95a6.97 6.97 0 0 1 9.9 0l-.7.7a5.98 5.98 0 0 0-8.5 0l-.7-.7Zm1.41 1.41a4.98 4.98 0 0 1 7.08 0l-.7.7a3.99 3.99 0 0 0-5.67 0l-.71-.7Z"/>
+            </svg>
+            <!-- Battery -->
+            <div class="battery-wrapper">
+              <div class="battery-body">
+                <div class="battery-level"></div>
+              </div>
+              <div class="battery-terminal"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phone Screen Content -->
+        <div class="phone-viewport">
+          
+          <!-- SYSTEM PUSH NOTIFICATION OVERLAY -->
+          <div id="push-notification" class="push-notification hidden">
+            <div class="push-header">
+              <div class="push-app-logo">
+                <span>Uber</span>
+              </div>
+              <span class="push-app-name">Uber</span>
+              <span class="push-time">now</span>
+            </div>
+            <div class="push-content">
+              <div class="push-title">🎉 Fare Watch Alert</div>
+              <div class="push-message">Fare dropped to <strong id="push-price">₹480</strong> for Home &rarr; Airport! Book now.</div>
+            </div>
+            <div class="push-pill-indicator"></div>
+          </div>
+
+          <!-- APP VIEW CONTAINER -->
+          <div class="app-body">
+            
+            <!-- SCREEN 1: SETUP SCREEN -->
+            <div id="screen-setup" class="app-screen active">
+              <!-- App Top Navigation -->
+              <div class="app-navbar">
+                <div class="app-back-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                </div>
+                <div class="app-title-logo">Uber</div>
+                <div class="app-profile-btn">
+                  <div class="avatar-circle"></div>
+                </div>
+              </div>
+
+              <!-- Main Scrollable App Content -->
+              <div class="app-content-scroll">
+                
+                <!-- Feature Title -->
+                <div class="feature-intro">
+                  <div class="tag-new">NEW</div>
+                  <h1>Fare Watch</h1>
+                  <p class="feature-subtitle">Track ride prices and get notified when fares drop below your budget.</p>
+                </div>
+
+                <!-- Route Selection Card -->
+                <div class="card route-card">
+                  <div class="route-inputs">
+                    <!-- Pickup Pin -->
+                    <div class="location-row">
+                      <div class="pin-indicator pickup-dot"></div>
+                      <div class="input-field-wrapper">
+                        <label for="pickup-input">Pickup Location</label>
+                        <input type="text" id="pickup-input" class="location-input" value="Home" placeholder="Where from?">
+                      </div>
+                    </div>
+                    
+                    <div class="route-line-connector"></div>
+                    
+                    <!-- Destination Pin -->
+                    <div class="location-row">
+                      <div class="pin-indicator dropoff-square"></div>
+                      <div class="input-field-wrapper">
+                        <label for="dest-input">Destination</label>
+                        <input type="text" id="dest-input" class="location-input" value="Airport" placeholder="Where to?">
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Date & Time Selector -->
+                  <div class="date-selector-row">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    <select id="time-selector" class="time-select">
+                      <option value="now">Leave Now</option>
+                      <option value="1hr">Leave in 1 hour</option>
+                      <option value="2hr">Leave in 2 hours</option>
+                      <option value="evening">Leave this evening</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Ride Selection Section -->
+                <div class="ride-options-section">
+                  <h3>Available Rides</h3>
+                  <div class="ride-options-list">
+                    <!-- UberGo -->
+                    <div class="ride-item" data-tier="ubergo" data-base="550">
+                      <div class="ride-details">
+                        <div class="ride-title-row">
+                          <span class="ride-name">UberGo</span>
+                          <span class="ride-capacity">&bull; 4 seats</span>
+                        </div>
+                        <p class="ride-desc">Affordable compact rides</p>
+                      </div>
+                      <div class="ride-fare-info">
+                        <span class="ride-price">₹550</span>
+                        <span class="ride-eta">4 mins away</span>
+                      </div>
+                    </div>
+                    
+                    <!-- Uber Premier (Default Selected) -->
+                    <div class="ride-item selected" data-tier="premier" data-base="650">
+                      <div class="ride-badge-ribbon">Recommended</div>
+                      <div class="ride-details">
+                        <div class="ride-title-row">
+                          <span class="ride-name">Uber Premier</span>
+                          <span class="ride-capacity">&bull; 4 seats</span>
+                        </div>
+                        <p class="ride-desc">Comfortable sedans, top-rated drivers</p>
+                      </div>
+                      <div class="ride-fare-info">
+                        <span class="ride-price">₹650</span>
+                        <span class="ride-eta">2 mins away</span>
+                      </div>
+                    </div>
+
+                    <!-- Uber XL -->
+                    <div class="ride-item" data-tier="uberxl" data-base="850">
+                      <div class="ride-details">
+                        <div class="ride-title-row">
+                          <span class="ride-name">Uber XL</span>
+                          <span class="ride-capacity">&bull; 6 seats</span>
+                        </div>
+                        <p class="ride-desc">Spacious SUVs for larger groups</p>
+                      </div>
+                      <div class="ride-fare-info">
+                        <span class="ride-price">₹850</span>
+                        <span class="ride-eta">6 mins away</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Target Fare Card -->
+                <div class="card target-fare-card">
+                  <div class="target-card-header">
+                    <h4>Set Target Fare</h4>
+                    <span class="target-badge">₹<span id="target-value-badge">500</span></span>
+                  </div>
+                  
+                  <p class="target-instructions">Drag the slider to set your desired fare alert limit.</p>
+
+                  <!-- Slider Control -->
+                  <div class="slider-container">
+                    <input type="range" id="target-slider" class="styled-slider" min="300" max="700" value="500" step="10">
+                    <div class="slider-labels">
+                      <span>₹300</span>
+                      <span class="mid-label">Target Limit</span>
+                      <span>₹700</span>
+                    </div>
+                  </div>
+
+                  <!-- Visual Price Comparison Block -->
+                  <div class="price-comparison-grid">
+                    <div class="comparison-column border-right">
+                      <span class="comp-label">Current Fare</span>
+                      <span class="comp-val primary-text">₹<span id="comp-current">650</span></span>
+                    </div>
+                    <div class="comparison-column border-right">
+                      <span class="comp-label">Target Fare</span>
+                      <span class="comp-val text-blue">₹<span id="comp-target">500</span></span>
+                    </div>
+                    <div class="comparison-column">
+                      <span class="comp-label">Potential Savings</span>
+                      <span class="comp-val text-green highlight-savings">₹<span id="comp-savings">150</span></span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Notification Preference Info -->
+                <div class="notification-helper">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                  <span>We'll send a push notification when the fare drops below ₹<span id="target-fare-summary-val">500</span>.</span>
+                </div>
+
+              </div>
+
+              <!-- Fixed Bottom Button Area -->
+              <div class="fixed-bottom-button">
+                <button id="btn-start-watch" class="btn-uber-primary">
+                  <span>Start Fare Watch</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- SCREEN 2: SKELETON / LOADING STATE -->
+            <div id="screen-loading" class="app-screen">
+              <div class="skeleton-header">
+                <div class="skeleton-circle placeholder-pulse"></div>
+                <div class="skeleton-line-long placeholder-pulse"></div>
+              </div>
+              
+              <div class="skeleton-content">
+                <div class="skeleton-card placeholder-pulse">
+                  <div class="skeleton-line placeholder-pulse" style="width: 40%"></div>
+                  <div class="skeleton-line-long placeholder-pulse" style="width: 80%"></div>
+                  <div class="skeleton-line placeholder-pulse" style="width: 60%"></div>
+                </div>
+                
+                <div class="skeleton-chart-box placeholder-pulse">
+                  <!-- Mimic chart grid lines -->
+                  <div class="skeleton-grid-line"></div>
+                  <div class="skeleton-grid-line"></div>
+                  <div class="skeleton-grid-line"></div>
+                </div>
+                
+                <div class="skeleton-card placeholder-pulse">
+                  <div class="skeleton-line placeholder-pulse" style="width: 30%"></div>
+                  <div class="skeleton-line-long placeholder-pulse" style="width: 70%"></div>
+                </div>
+              </div>
+
+              <!-- Absolute Overlay for Success Tick Animation -->
+              <div id="success-tick-overlay" class="success-tick-overlay hidden">
+                <div class="success-checkmark-box">
+                  <svg class="checkmark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                    <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                    <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                  </svg>
+                </div>
+                <h3 class="success-headline">Fare Watch Active</h3>
+                <p class="success-subheadline">Monitoring live price trends now</p>
+              </div>
+            </div>
+
+            <!-- SCREEN 3: LIVE DASHBOARD -->
+            <div id="screen-dashboard" class="app-screen">
+              <!-- Dashboard Header -->
+              <div class="app-navbar dashboard-navbar">
+                <div class="navbar-left">
+                  <span class="active-dot-pulse"></span>
+                  <span class="tracking-label">Live Fare Watch</span>
+                </div>
+                <div class="navbar-right">
+                  <span id="dashboard-target-badge" class="badge-target">Target: ₹500</span>
+                </div>
+              </div>
+
+              <div class="app-content-scroll">
+                
+                <!-- Quick Route Overview -->
+                <div class="dashboard-route-summary">
+                  <div class="route-summary-path">
+                    <span id="route-lbl-pickup">Home</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    <span id="route-lbl-dest">Airport</span>
+                  </div>
+                  <div class="route-summary-meta">
+                    <span id="dashboard-tier-lbl">Uber Premier</span> &bull; <span id="dashboard-time-lbl">Leave Now</span>
+                  </div>
+                </div>
+
+                <!-- Main Live Fare Card -->
+                <div class="card live-fare-card">
+                  <div class="live-fare-header">
+                    <span>CURRENT FARE</span>
+                    <span id="trend-indicator-badge" class="badge-trend high-demand">📈 High Demand</span>
+                  </div>
+                  <div class="live-price-display">
+                    <span class="currency-symbol">₹</span>
+                    <span id="live-price-val" class="live-price-amount">650</span>
+                  </div>
+                  <div class="live-pulse-container">
+                    <span class="live-pulsing-dot"></span>
+                    <span class="live-status-txt">Monitoring live fare changes...</span>
+                  </div>
+                </div>
+
+                <!-- Min/Max & Trend Quick Insights -->
+                <div class="stats-insights-grid">
+                  <div class="stat-insight-item">
+                    <span class="insight-label">Lowest Today</span>
+                    <span id="val-lowest-today" class="insight-value text-green">₹510</span>
+                  </div>
+                  <div class="stat-insight-item">
+                    <span class="insight-label">Highest Today</span>
+                    <span id="val-highest-today" class="insight-value text-red">₹680</span>
+                  </div>
+                  <div class="stat-insight-item">
+                    <span class="insight-label">Est. Trend</span>
+                    <span id="val-estimated-trend" class="insight-value">Downward</span>
+                  </div>
+                </div>
+
+                <!-- Interactive SVG Fare Chart Section -->
+                <div class="card chart-card">
+                  <div class="chart-header">
+                    <h4>Price History (Simulated)</h4>
+                    <span class="chart-timeframe">Last 10 updates</span>
+                  </div>
+                  
+                  <div class="chart-canvas-wrapper">
+                    <!-- SVG Chart -->
+                    <svg id="live-fare-svg-chart" class="live-svg-chart" viewBox="0 0 400 180">
+                      <!-- Grid lines -->
+                      <line x1="0" y1="30" x2="400" y2="30" class="chart-grid-line" />
+                      <line x1="0" y1="80" x2="400" y2="80" class="chart-grid-line" />
+                      <line x1="0" y1="130" x2="400" y2="130" class="chart-grid-line" />
+                      
+                      <!-- Dotted Target Price line -->
+                      <line id="svg-target-line" x1="0" y1="105" x2="400" y2="105" class="chart-target-line" stroke-dasharray="4,4" />
+                      <text id="svg-target-text" x="390" y="100" text-anchor="end" class="chart-target-label">Target (₹500)</text>
+
+                      <!-- Area under curve (filled) -->
+                      <path id="chart-area-path" d="M 0 180 L 0 180 Z" class="chart-area-fill" />
+                      
+                      <!-- Curve line -->
+                      <path id="chart-curve-path" d="" class="chart-line-stroke" />
+
+                      <!-- Interactive Dots for prices (Drawn dynamically) -->
+                      <g id="chart-dots-group"></g>
+
+                      <!-- Active/Current Price Indicator Dot -->
+                      <circle id="chart-current-dot" cx="0" cy="0" r="6" class="chart-pulsing-dot hidden" />
+                    </svg>
+                  </div>
+
+                  <div class="chart-legend">
+                    <div class="legend-item"><span class="legend-dot color-black"></span><span>Live Price</span></div>
+                    <div class="legend-item"><span class="legend-dot dashed border-blue"></span><span>Target Price Limit</span></div>
+                  </div>
+                </div>
+
+                <!-- Feature Perks Mini Card -->
+                <div class="mini-card info-perk-card">
+                  <div class="perk-icon-circle">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                  </div>
+                  <div class="perk-text">
+                    <strong>Smart Suggestion:</strong> Fares are typically lowest between 2:00 PM and 4:00 PM on this route. We will notify you immediately when it strikes.
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Cancel Tracking Trigger Button Area -->
+              <div class="fixed-bottom-button">
+                <button id="btn-cancel-watch" class="btn-uber-secondary">
+                  <span>Cancel Fare Watch</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- IN-APP POPUP ALERT MODAL (FARE DROPPED) -->
+            <div id="fare-alert-overlay" class="modal-overlay hidden">
+              <div class="modal-container">
+                <div class="modal-decor-bell">
+                  <div class="bell-animation-ring">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                  </div>
+                </div>
+                <div class="modal-header">
+                  <h3>🎉 Fare Alert</h3>
+                  <p>Your ride fare has dropped below your target price!</p>
+                </div>
+                <div class="modal-content">
+                  <div class="alert-route-pill">
+                    <span id="alert-pickup">Home</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    <span id="alert-dest">Airport</span>
+                  </div>
+                  
+                  <div class="alert-comparison-box">
+                    <div class="alert-price-block">
+                      <span class="lbl">Current Fare</span>
+                      <span id="alert-price-curr" class="val text-green">₹480</span>
+                    </div>
+                    <div class="price-arrow-indicator">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+                    </div>
+                    <div class="alert-price-block">
+                      <span class="lbl">Your Target</span>
+                      <span id="alert-price-target" class="val">₹500</span>
+                    </div>
+                  </div>
+                  <p class="alert-urgency-notice">Book now before prices fluctuate or demand surges.</p>
+                </div>
+                <div class="modal-actions">
+                  <button id="btn-alert-book" class="btn-uber-primary full-width">Book Ride Now</button>
+                  <button id="btn-alert-keep" class="btn-uber-flat full-width">Keep Watching</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- SCREEN 4: BOOKING CONFIRMED -->
+            <div id="screen-confirmed" class="app-screen">
+              <div class="confirmed-wrapper">
+                <div class="success-checkmark-box animated">
+                  <svg class="checkmark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                    <circle class="checkmark-circle animate" cx="26" cy="26" r="25" fill="none"/>
+                    <path class="checkmark-check animate" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                  </svg>
+                </div>
+                
+                <h2>Ride Confirmed!</h2>
+                <p class="confirmation-subtitle">Your driver is on the way.</p>
+
+                <div class="receipt-card">
+                  <div class="receipt-row">
+                    <span class="receipt-label">Route</span>
+                    <span class="receipt-val font-medium" id="confirm-route-txt">Home &rarr; Airport</span>
+                  </div>
+                  <div class="receipt-row">
+                    <span class="receipt-label">Service</span>
+                    <span class="receipt-val" id="confirm-service-txt">Uber Premier</span>
+                  </div>
+                  <div class="receipt-row">
+                    <span class="receipt-label">Locked Price</span>
+                    <span class="receipt-val text-green font-bold" id="confirm-price-txt">₹480</span>
+                  </div>
+                  <div class="receipt-row">
+                    <span class="receipt-label">ETA</span>
+                    <span class="receipt-val">3 mins away</span>
+                  </div>
+                </div>
+
+                <div class="driver-glance-box">
+                  <div class="driver-avatar-placeholder">
+                    <span>JD</span>
+                  </div>
+                  <div class="driver-details">
+                    <strong>John Doe (4.95 &starf;)</strong>
+                    <span>Toyota Camry &bull; KA-01-MJ-9999</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Back button -->
+              <div class="fixed-bottom-button">
+                <button id="btn-confirm-close" class="btn-uber-primary">
+                  <span>Done &amp; Exit Demo</span>
+                </button>
+              </div>
+            </div>
+
+          </div> <!-- End app-body -->
+        </div> <!-- End phone-viewport -->
+        
+        <!-- Home Indicator Bar -->
+        <div class="device-home-bar"></div>
+      </div> <!-- End device-chassis -->
+    </section>
+
+    <!-- RIGHT PANE: PM Case Study & Interactive Controller -->
+    <section class="case-study-pane">
+      
+      <!-- Presentation Mode Exit banner -->
+      <div id="presenter-exit-tip" class="presenter-exit-banner hidden">
+        <span>Currently in <strong>Presenter View</strong>. Scroll down or click toggle button to view Case Study.</span>
+      </div>
+
+      <div class="pane-scroller">
+        
+        <!-- Interactive Controller Console -->
+        <div class="control-console card">
+          <div class="console-header">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>
+            <h3>Demo Control Center</h3>
+          </div>
+          <p class="console-intro">Operate the prototype simulator to present to stakeholders.</p>
+          
+          <div class="console-actions">
+            <div class="console-action-group">
+              <span class="group-label">Simulate Price Fluctuations (Live Dashboard Active)</span>
+              <div class="btn-grid">
+                <button id="btn-force-drop" class="btn-action btn-green" disabled>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline><polyline points="17 18 23 18 23 12"></polyline></svg>
+                  Trigger Price Drop (Under Target)
+                </button>
+                <button id="btn-force-surge" class="btn-action btn-red" disabled>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                  Trigger Surge Pricing (₹680+)
+                </button>
+              </div>
+            </div>
+
+            <div class="console-action-group">
+              <span class="group-label">Prototype Navigation & System controls</span>
+              <div class="btn-grid">
+                <button id="btn-reset-demo" class="btn-action">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+                  Reset Demo State
+                </button>
+                <button id="btn-play-sound" class="btn-action">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                  Test Notification Sound
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Toast container inside simulator pane or controls -->
+          <div id="toast-notification" class="toast-box hidden">
+            <span id="toast-message">Fare Watch tracking active!</span>
+          </div>
+        </div>
+
+        <!-- PM Case Study Content -->
+        <article class="case-study-details">
+          
+          <div class="case-header-block">
+            <div class="case-tag">PRODUCT PROPOSAL</div>
+            <h2>Product Manager Case Study</h2>
+            <p class="case-byline">Proposed feature expansion for Uber Airport &amp; Scheduled Commutes</p>
+          </div>
+
+          <!-- Section: The Problem -->
+          <div class="case-section">
+            <div class="section-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            </div>
+            <div class="section-content">
+              <h4>The Problem</h4>
+              <p>Riders repeatedly check ride prices and switch between competitor ride-sharing apps (app-hopping) due to surge pricing uncertainty, especially for high-value scheduled rides like airport transfers or daily work commutes. This behavior creates friction and results in high booking abandonment rates.</p>
+              
+              <div class="insight-callout">
+                <strong>PM Insight:</strong> In user research, <strong>67%</strong> of airport commuters admitted to checking prices on multiple apps 3-5 times in the hour leading up to their departure.
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: The Solution -->
+          <div class="case-section">
+            <div class="section-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            </div>
+            <div class="section-content">
+              <h4>The Solution: Scheduled Fare Watch</h4>
+              <p>Scheduled Fare Watch automates price monitoring. Users define a route, select a ride tier, and drag a slider to input their preferred target fare. Uber's system actively tracks fare fluctuations and triggers an immediate push notification as soon as the fare falls below their set threshold, driving high-intent bookings.</p>
+              
+              <div class="solution-pillars-grid">
+                <div class="pillar-item">
+                  <div class="pillar-bullet">1</div>
+                  <strong>Set &amp; Forget</strong>
+                  <p>Eliminates active price checking, reducing fatigue.</p>
+                </div>
+                <div class="pillar-item">
+                  <div class="pillar-bullet">2</div>
+                  <strong>Target Alerts</strong>
+                  <p>Incentivizes booking with clear savings validation.</p>
+                </div>
+                <div class="pillar-item">
+                  <div class="pillar-bullet">3</div>
+                  <strong>One-Tap Booking</strong>
+                  <p>Direct CTA transitions instantly into ride confirmation.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Business Impact -->
+          <div class="case-section">
+            <div class="section-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+            </div>
+            <div class="section-content">
+              <h4>Projected Business Impact</h4>
+              <p>We anticipate that introducing Scheduled Fare Watch will capture price-sensitive demand that is currently leaked to competitors.</p>
+              
+              <table class="impact-metrics-table">
+                <thead>
+                  <tr>
+                    <th>Metric Indicator</th>
+                    <th>Baseline</th>
+                    <th>Expected Target</th>
+                    <th>Strategic Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Booking Conversion</strong></td>
+                    <td>14.2%</td>
+                    <td><strong>18.5% (+4.3%)</strong></td>
+                    <td>Higher completed rides on airport/commute routes.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>App Switching (Chime rate)</strong></td>
+                    <td>42%</td>
+                    <td><strong>25% (-17%)</strong></td>
+                    <td>Users lock-in Uber early rather than cross-checking.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Customer Retention (MoM)</strong></td>
+                    <td>71%</td>
+                    <td><strong>76% (+5%)</strong></td>
+                    <td>Builds reliance on Uber's proactive value system.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Section: Technical Proposal -->
+          <div class="case-section">
+            <div class="section-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+            </div>
+            <div class="section-content">
+              <h4>System Flow &amp; Tech Architecture</h4>
+              <p>The feature will leverage our existing fare estimation engine, coupled with a pub/sub subscription manager linked to regional cell density and driver dispatch ratios.</p>
+              
+              <div class="flow-chart-diagram">
+                <div class="diagram-step">
+                  <span>Rider Sets Target</span>
+                  <p>Target fare stored in temporary Redis cache</p>
+                </div>
+                <div class="diagram-arrow">&rarr;</div>
+                <div class="diagram-step">
+                  <span>Fare Monitor Engine</span>
+                  <p>Kafka topic evaluates dispatch rates &amp; demand curves</p>
+                </div>
+                <div class="diagram-arrow">&rarr;</div>
+                <div class="diagram-step">
+                  <span>Push Alert Sent</span>
+                  <p>APNS/FCM trigger with custom sound chime</p>
+                </div>
+                <div class="diagram-arrow">&rarr;</div>
+                <div class="diagram-step">
+                  <span>One-Tap Lock</span>
+                  <p>Locks fare for 3 minutes for conversion</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </article>
+
+      </div>
+    </section>
+
+  </div> <!-- End dashboard-wrapper -->
+
+  <!-- Prototype scripts -->
+  <script src="app.js"></script>
+</body>
+</html>
